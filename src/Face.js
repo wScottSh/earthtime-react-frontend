@@ -3,12 +3,27 @@ import './Face.css';
 import TodoModel from './testModel.js'
 
 class Face extends Component {
-  render() {
+  constructor(){
+    super()
+    this.state = {
+      names: []
+    }
+  }
+  componentDidMount(){
+    this.fetchData()
+  }
+  fetchData(){
     TodoModel.all().then( (res) => {
-      console.log(res);
+      this.setState ({
+        names: res.data.name,
+        name: ''
+      })
     })
+  }
+
+  render() {
     return (
-      <h1>Well, hello!</h1>
+      <h1>Name: {this.state.names}</h1>
     );
   }
 }
