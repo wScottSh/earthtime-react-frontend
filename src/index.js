@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Face from './Face';
+import Clock from './components/Clock/Clock';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<Face />, document.getElementById('root'));
+ReactDOM.render(<Clock />, document.getElementById('root'));
 registerServiceWorker();
