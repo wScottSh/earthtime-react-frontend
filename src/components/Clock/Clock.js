@@ -5,7 +5,9 @@ import ClockFace from '../ClockFace/ClockFace'
 class Clock extends Component {
   render() {
     return (
-      <ClockFace />
+      <div className="clockFace">
+        <ClockFace />
+      </div>
     );
   }
 }
