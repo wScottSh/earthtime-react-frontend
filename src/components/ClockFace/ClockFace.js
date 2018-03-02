@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import 'react-circular-progressbar/dist/styles.css';
 import './ClockFace.css';
-import TimeModel from '../../models/TimeModel.js'
+import CircularProgressbar from 'react-circular-progressbar';
 import axios from 'axios';
 
+
 let fromJSON
-// const apiENV = 'https://earthtime-react.herokuapp.com'
-const apiENV = 'http://localhost:3000'
+const apiENV = 'https://earthtime-react.herokuapp.com'
+// const apiENV = 'http://localhost:3000'
 
 class ClockFace extends Component {
   constructor() {
@@ -25,9 +27,11 @@ class ClockFace extends Component {
         let beatCounter = fromJSON.beatLength
         this.timer = setInterval(function(){
           let rightNow = fromJSON.earthTime.now += .01;
-          // console.log(rightNow);
+          let dayStart = fromJSON.earthTime.dayStart
+          console.log(dayStart);
           self.setState({
-            now: rightNow
+            now: rightNow,
+            fauxPercent: rightNow * .1,
           })
         }, beatCounter/100)
       })
@@ -37,8 +41,9 @@ class ClockFace extends Component {
     let roundedBeat = Number(Math.round(this.state.now+'e1')+'e-1');
     return (
       <div className="clockFace">
-        <h1>{roundedBeat}</h1>
-        <div className="spinnyBox"></div>
+        <CircularProgressbar percentage={this.state.fauxPercent} />
+        <time className="nowText">@{roundedBeat}</time>
+        {/* <p>{this.state.faceRotation}</p> */}
       </div>
     );
   }

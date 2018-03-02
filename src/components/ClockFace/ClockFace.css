@@ -1,8 +1,15 @@
 .clockFace {
+  display: flex;
   position: absolute;
+  align-items: center;
+  justify-content: center;
   width: 500px;
   height: 500px;
-  background-color: green;
+  /* background-color: green; */
+}
+
+.nowText {
+  position: absolute;
 }
 
 .spinnyBox {
@@ -14,4 +21,13 @@
   left: 50%;
   top: 50%;
   transform: rotate(30deg) translateX(0px) rotate(-30deg);
+}
+
+.CircularProgressbar-path {
+  transform: rotate(154.011694135deg);
+  transform-origin: center center;
+}
+
+.CircularProgressbar-text {
+  visibility: hidden;
 }
