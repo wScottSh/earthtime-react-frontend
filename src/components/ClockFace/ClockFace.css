@@ -1,11 +1,17 @@
+/* .clockFace {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+} */
+
 .clockFace {
   display: flex;
   position: absolute;
   align-items: center;
   justify-content: center;
-  width: 500px;
-  height: 500px;
-  /* background-color: green; */
+  object-fit: contain;
 }
 
 .nowText {
@@ -21,6 +27,10 @@
   left: 50%;
   top: 50%;
   transform: rotate(30deg) translateX(0px) rotate(-30deg);
+}
+
+.CircularProgressbar {
+  stroke-width: 2px;
 }
 
 .CircularProgressbar-path {
