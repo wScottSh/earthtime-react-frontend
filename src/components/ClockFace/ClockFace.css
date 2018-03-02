@@ -1,11 +1,3 @@
-/* .clockFace {
-  display: flex;
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-  object-fit: contain;
-} */
-
 .clockFace {
   display: flex;
   position: absolute;
@@ -13,7 +5,7 @@
   justify-content: center;
 }
 
-.timeContainer{
+.timeContainer, .spinnyBox {
   position: absolute;
   display: flex;
   align-items: center;
@@ -23,17 +15,33 @@
 
 .spinnyBox {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background-color: yellow;
-  transform-origin: 50% 50%;
-  left: 50%;
-  top: 50%;
-  transform: rotate(30deg) translateX(0px) rotate(-30deg);
+  width: 60px;
+  height: 60px;
+  transform-origin: center;
+}
+
+.sunrise {
+    transform: rotate(0deg) translateX(100px) rotate(-0deg);
+}
+
+.solarNoon {
+  transform: rotate(0deg) translateX(100px) rotate(-0deg);
+}
+
+.midnight {
+  transform: rotate(0deg) translateX(100px) rotate(-0deg);
+}
+
+.sunset {
+  transform: rotate(0deg) translateX(100px) rotate(-0deg);
 }
 
 .CircularProgressbar {
   stroke-width: 2px;
+}
+
+.CircularProgressbar .CircularProgressbar-path {
+  stroke-linecap: butt;
 }
 
 .CircularProgressbar-path {

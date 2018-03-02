@@ -6,14 +6,14 @@ import axios from 'axios';
 import $ from 'jquery';
 
 let fromJSON
-// const apiENV = 'https://earthtime-react.herokuapp.com'
-const apiENV = 'http://localhost:3000'
+const apiENV = 'https://earthtime-react.herokuapp.com'
+// const apiENV = 'http://localhost:3000'
 
+let size
 $(function(){
   $(window).resize(function(){
     var width  = $(window).width(),
         height = $(window).height(),
-        size,
         padding = .9;
 
     if (width > height) {
@@ -71,11 +71,47 @@ class ClockFace extends Component {
           this.dayEnd = '*' + Math.round((obj.dayEnd + 1000) % 1000)
         }, beatCounter/100)
 
+        // Rotates the clockface
         $(function() {
           let rotation = (180+(-1*fromJSON.earthTime.dayStart*.001)*360)
           $('.CircularProgressbar-path').css('transform', 'rotate(' + rotation + 'deg)')
         })
 
+        let offset = fromJSON.earthTime.dayStart;
+        let solarNoon = fromJSON.earthTime.solarNoon;
+        let sunrise = fromJSON.earthTime.solarSight;
+        let sunset = fromJSON.earthTime.solarClipse;
+        let width = $(window).width(),
+            height = $(window).height(),
+            size,
+            distance
+
+        $(window).resize(function(){
+          distance = size * .415
+          if (width > height) {
+            size = height
+          } else {
+            size = width
+          }
+        }).trigger('resize')
+
+        // positions the sunrise/sunset divs
+        $(function() {
+          let rotation = ((-1*offset*.36) + 90 + (offset*.36))
+          $('.midnight').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+        })
+        $(function() {
+          let rotation = ((-1*offset*.36) + 90 + (solarNoon*.36))
+          $('.solarNoon').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+        })
+        $(function() {
+          let rotation = ((-1*offset*.36) + 90 + (sunrise*.36))
+          $('.sunrise').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+        })
+        $(function() {
+          let rotation = ((-1*offset*.36) + 90 + (sunset*.36))
+          $('.sunset').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+        })
       })
   }
 
@@ -88,6 +124,22 @@ class ClockFace extends Component {
           <time className="nowTime">@{roundedBeat}</time>
           <time className="relativeTimes">{this.state.relativeTimes}</time>
         </div>
+          <svg className="spinnyBox sunrise">
+            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+            <p>^</p>
+          </svg>
+          <svg className="spinnyBox sunset">
+            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+            <p>-</p>
+          </svg>
+          <svg className="spinnyBox solarNoon">
+            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+            <p>#</p>
+          </svg>
+          <svg className="spinnyBox midnight">
+            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+            <p>*</p>
+          </svg>
       </div>
     );
   }
