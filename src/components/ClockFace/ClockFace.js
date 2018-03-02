@@ -14,9 +14,11 @@ $(function(){
   $(window).resize(function(){
     var width  = $(window).width(),
         height = $(window).height(),
+        distance,
         padding = .9;
 
     if (width > height) {
+      distance = size * .460
       size = height * padding
     } else {
       size = width * padding
@@ -26,6 +28,28 @@ $(function(){
     $('.nowTime').css('font-size', size * .01 + 'em')
     $('.relativeTimes').css('font-size', size * .005 + 'em')
     $('p').css('font-size', size * .003 + 'em')
+
+    let offset = fromJSON.earthTime.dayStart;
+    let solarNoon = fromJSON.earthTime.solarNoon;
+    let sunrise = fromJSON.earthTime.solarSight;
+    let sunset = fromJSON.earthTime.solarClipse;
+
+    $(function() {
+      let rotation = ((-1*offset*.36) + 90 + (offset*.36))
+      $('.midnight').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+    })
+    $(function() {
+      let rotation = ((-1*offset*.36) + 90 + (solarNoon*.36))
+      $('.solarNoon').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+    })
+    $(function() {
+      let rotation = ((-1*offset*.36) + 90 + (sunrise*.36))
+      $('.sunrise').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+    })
+    $(function() {
+      let rotation = ((-1*offset*.36) + 90 + (sunset*.36))
+      $('.sunset').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+    })
   })
   .trigger('resize');
 });
@@ -78,40 +102,45 @@ class ClockFace extends Component {
           $('.CircularProgressbar-path').css('transform', 'rotate(' + rotation + 'deg)')
         })
 
-        let offset = fromJSON.earthTime.dayStart;
-        let solarNoon = fromJSON.earthTime.solarNoon;
-        let sunrise = fromJSON.earthTime.solarSight;
-        let sunset = fromJSON.earthTime.solarClipse;
-        let width = $(window).width(),
-            height = $(window).height(),
-            size,
-            distance
+        $(function(){
+          var width  = $(window).width(),
+              height = $(window).height(),
+              distance,
+              padding = .9;
 
-        $(window).resize(function(){
-          distance = size * .415
           if (width > height) {
-            size = height
+            distance = size * .460
+            size = height * padding
           } else {
-            size = width
+            size = width * padding
           }
-        }).trigger('resize')
+          $('.clockFace').css('width', size);
+          $('.clockFace').css('height', size);
+          $('.nowTime').css('font-size', size * .01 + 'em')
+          $('.relativeTimes').css('font-size', size * .005 + 'em')
+          $('p').css('font-size', size * .003 + 'em')
 
-        // positions the sunrise/sunset divs
-        $(function() {
-          let rotation = ((-1*offset*.36) + 90 + (offset*.36))
-          $('.midnight').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-        })
-        $(function() {
-          let rotation = ((-1*offset*.36) + 90 + (solarNoon*.36))
-          $('.solarNoon').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-        })
-        $(function() {
-          let rotation = ((-1*offset*.36) + 90 + (sunrise*.36))
-          $('.sunrise').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-        })
-        $(function() {
-          let rotation = ((-1*offset*.36) + 90 + (sunset*.36))
-          $('.sunset').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+          let offset = fromJSON.earthTime.dayStart;
+          let solarNoon = fromJSON.earthTime.solarNoon;
+          let sunrise = fromJSON.earthTime.solarSight;
+          let sunset = fromJSON.earthTime.solarClipse;
+
+          $(function() {
+            let rotation = ((-1*offset*.36) + 90 + (offset*.36))
+            $('.midnight').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+          })
+          $(function() {
+            let rotation = ((-1*offset*.36) + 90 + (solarNoon*.36))
+            $('.solarNoon').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+          })
+          $(function() {
+            let rotation = ((-1*offset*.36) + 90 + (sunrise*.36))
+            $('.sunrise').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+          })
+          $(function() {
+            let rotation = ((-1*offset*.36) + 90 + (sunset*.36))
+            $('.sunset').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
+          })
         })
       })
   }
