@@ -1,11 +1,19 @@
-.clockFace {
+#root {
+  background: linear-gradient(-115deg, #24243e, #302b63, #0f0c29);
+}
+
+time {
+  color: white;
+}
+
+.clockFace, .spinnyBox {
   display: flex;
   position: absolute;
   align-items: center;
   justify-content: center;
 }
 
-.timeContainer, .spinnyBox {
+.timeContainer {
   position: absolute;
   display: flex;
   align-items: center;
@@ -20,27 +28,12 @@
   transform-origin: center;
 }
 
-.sunrise {
-    transform: rotate(0deg) translateX(100px) rotate(-0deg);
-}
-
-.solarNoon {
-  transform: rotate(0deg) translateX(100px) rotate(-0deg);
-}
-
-.midnight {
-  transform: rotate(0deg) translateX(100px) rotate(-0deg);
-}
-
-.sunset {
-  transform: rotate(0deg) translateX(100px) rotate(-0deg);
-}
-
 .CircularProgressbar {
   stroke-width: 2px;
 }
 
 .CircularProgressbar .CircularProgressbar-path {
+  stroke: #a75149;
   stroke-linecap: butt;
 }
 
@@ -49,6 +42,21 @@
   transform-origin: center center;
 }
 
+.CircularProgressbar-trail {
+  stroke: #886d4d;
+}
+
 .CircularProgressbar-text {
   visibility: hidden;
+}
+
+svg, circle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+p {
+  z-index: 1;
+  color: white;
 }

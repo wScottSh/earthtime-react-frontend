@@ -25,6 +25,7 @@ $(function(){
     $('.clockFace').css('height', size);
     $('.nowTime').css('font-size', size * .01 + 'em')
     $('.relativeTimes').css('font-size', size * .005 + 'em')
+    $('p').css('font-size', size * .003 + 'em')
   })
   .trigger('resize');
 });
@@ -124,22 +125,31 @@ class ClockFace extends Component {
           <time className="nowTime">@{roundedBeat}</time>
           <time className="relativeTimes">{this.state.relativeTimes}</time>
         </div>
-          <svg className="spinnyBox sunrise">
-            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+
+          <div className="spinnyBox sunrise">
+            <svg>
+              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
+            </svg>
             <p>^</p>
-          </svg>
-          <svg className="spinnyBox sunset">
-            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+          </div>
+          <div className="spinnyBox sunset">
+            <svg>
+              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
+            </svg>
             <p>-</p>
-          </svg>
-          <svg className="spinnyBox solarNoon">
-            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+          </div>
+          <div className="spinnyBox solarNoon">
+            <svg>
+              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
+            </svg>
             <p>#</p>
-          </svg>
-          <svg className="spinnyBox midnight">
-            <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="white"/>
+          </div>
+          <div className="spinnyBox midnight">
+            <svg>
+              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
+            </svg>
             <p>*</p>
-          </svg>
+          </div>
       </div>
     );
   }
