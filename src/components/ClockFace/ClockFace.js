@@ -1,187 +1,122 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './ClockFace.css';
-import CircularProgressbar from 'react-circular-progressbar';
 import axios from 'axios';
-import $ from 'jquery';
 
-let fromJSON
-const apiENV = 'https://earthtime-react.herokuapp.com'
-// const apiENV = 'http://localhost:3000'
+const API_URL = process.env.REACT_APP_API_URL || 'https://earthtime-react.herokuapp.com';
 
-let size
-$(function(){
-  $(window).resize(function(){
-    var width  = $(window).width(),
-        height = $(window).height(),
-        distance,
-        padding = .9;
+const ClockFace = () => {
+  const [timeState, setTimeState] = useState({
+    now: 0,
+    fauxPercent: 0,
+    relativeTimes: '',
+    dayStart: '',
+    sunSight: '',
+    solarNoon: '',
+    sunClipse: '',
+    dayEnd: ''
+  });
 
-    if (width > height) {
-      distance = size * .460
-      size = height * padding
-    } else {
-      size = width * padding
-    }
-    $('.clockFace').css('width', size);
-    $('.clockFace').css('height', size);
-    $('.nowTime').css('font-size', size * .01 + 'em')
-    $('.relativeTimes').css('font-size', size * .005 + 'em')
-    $('p').css('font-size', size * .003 + 'em')
+  const [dimensions, setDimensions] = useState({
+    size: 0,
+    distance: 0
+  });
 
-    let offset = fromJSON.earthTime.dayStart;
-    let solarNoon = fromJSON.earthTime.solarNoon;
-    let sunrise = fromJSON.earthTime.solarSight;
-    let sunset = fromJSON.earthTime.solarClipse;
+  const updateDimensions = useCallback(() => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const padding = 0.9;
+    const newSize = width > height ? height * padding : width * padding;
+    const distance = newSize * 0.460;
 
-    $(function() {
-      let rotation = ((-1*offset*.36) + 90 + (offset*.36))
-      $('.midnight').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-    })
-    $(function() {
-      let rotation = ((-1*offset*.36) + 90 + (solarNoon*.36))
-      $('.solarNoon').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-    })
-    $(function() {
-      let rotation = ((-1*offset*.36) + 90 + (sunrise*.36))
-      $('.sunrise').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-    })
-    $(function() {
-      let rotation = ((-1*offset*.36) + 90 + (sunset*.36))
-      $('.sunset').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-    })
-  })
-  .trigger('resize');
-});
+    setDimensions({ size: newSize, distance });
+  }, []);
 
-class ClockFace extends Component {
-  constructor() {
-    super();
-    this.state = {
-      now: 0
-    }
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/api/v1/earthtime`);
+        const beatCounter = data.beatLength;
 
-  componentDidMount() {
-    let self = this;
-    axios.get(apiENV + '/api/v1/earthtime')
-      .then( (res) => {
-        fromJSON = res.data;
-        console.log(fromJSON);
+        const timer = setInterval(() => {
+          setTimeState(prev => {
+            const rightNow = data.earthTime.now + 0.01;
+            const obj = data.earthTime;
 
-        let beatCounter = fromJSON.beatLength
-        this.timer = setInterval(function(){
-          let rightNow = fromJSON.earthTime.now += .01;
-          // let dayStart = fromJSON.earthTime.dayStart
-          self.setState({
-            now: rightNow,
-            fauxPercent: rightNow * .1,
-            relativeTimes: ''
-          })
+            let relativeTimes = '';
+            if (rightNow > obj.dayStart && rightNow < obj.solarSight) {
+              relativeTimes = `*| ${Math.round(rightNow - obj.dayStart)} | ${Math.round(obj.solarSight - rightNow)}|^`;
+            }
+            // ... add other time conditions
 
-          const obj = fromJSON.earthTime
-          if (rightNow > (obj.dayStart) && rightNow < obj.solarSight) {
-            self.setState({relativeTimes: '*| ' + Math.round(rightNow - obj.dayStart) + ' | ' + Math.round(obj.solarSight - rightNow) + '|^'})
-          } else if (rightNow > obj.solarSight && rightNow < obj.solarNoon) {
-            self.setState({relativeTimes: '^| ' + Math.round(rightNow - obj.solarSight) + ' | ' + Math.round(obj.solarNoon - rightNow) + '|#'})
-          } else if (rightNow > obj.solarNoon && rightNow < obj.solarClipse) {
-            self.setState({relativeTimes: '#| ' + Math.round(rightNow - obj.solarNoon) + ' | ' + Math.round(obj.solarClipse - rightNow) + '|-'})
-          } else if (rightNow > obj.solarClipse && rightNow < obj.dayEnd) {
-            self.setState({relativeTimes: '-| ' + Math.round(rightNow - obj.solarClipse) + ' | ' + Math.round(obj.dayEnd - rightNow) + ' |*'})
-          }
-          this.dayStart = '*' + Math.round((obj.dayStart + 1000) % 1000)
-          this.sunSight = '^' + Math.round((obj.solarSight + 1000) % 1000)
-          this.solarNoon = '#' + Math.round((obj.solarNoon + 1000) % 1000)
-          this.sunClipse = '-' + Math.round((obj.solarClipse + 1000) % 1000)
-          this.dayEnd = '*' + Math.round((obj.dayEnd + 1000) % 1000)
-        }, beatCounter/100)
+            return {
+              now: rightNow,
+              fauxPercent: rightNow * 0.1,
+              relativeTimes,
+              dayStart: `*${Math.round((obj.dayStart + 1000) % 1000)}`,
+              sunSight: `^${Math.round((obj.solarSight + 1000) % 1000)}`,
+              solarNoon: `#${Math.round((obj.solarNoon + 1000) % 1000)}`,
+              sunClipse: `-${Math.round((obj.solarClipse + 1000) % 1000)}`,
+              dayEnd: `*${Math.round((obj.dayEnd + 1000) % 1000)}`
+            };
+          });
+        }, beatCounter/100);
 
-        // Rotates the clockface
-        $(function() {
-          let rotation = (180+(-1*fromJSON.earthTime.dayStart*.001)*360)
-          $('.CircularProgressbar-path').css('transform', 'rotate(' + rotation + 'deg)')
-        })
+        return () => clearInterval(timer);
+      } catch (error) {
+        console.error('Failed to fetch time data:', error);
+      }
+    };
 
-        $(function(){
-          var width  = $(window).width(),
-              height = $(window).height(),
-              distance,
-              padding = .9;
+    fetchData();
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, [updateDimensions]);
 
-          if (width > height) {
-            distance = size * .460
-            size = height * padding
-          } else {
-            size = width * padding
-          }
-          $('.clockFace').css('width', size);
-          $('.clockFace').css('height', size);
-          $('.nowTime').css('font-size', size * .01 + 'em')
-          $('.relativeTimes').css('font-size', size * .005 + 'em')
-          $('p').css('font-size', size * .003 + 'em')
+  const getRotation = (offset, time) => {
+    return `rotate(${(-1 * offset * 0.36) + 90 + (time * 0.36)}deg) 
+            translateX(${dimensions.distance}px) 
+            rotate(${-(-1 * offset * 0.36) + 90 + (time * 0.36)}deg)`;
+  };
 
-          let offset = fromJSON.earthTime.dayStart;
-          let solarNoon = fromJSON.earthTime.solarNoon;
-          let sunrise = fromJSON.earthTime.solarSight;
-          let sunset = fromJSON.earthTime.solarClipse;
+  const roundedBeat = Number(Math.round(timeState.now + 'e1') + 'e-1');
 
-          $(function() {
-            let rotation = ((-1*offset*.36) + 90 + (offset*.36))
-            $('.midnight').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-          })
-          $(function() {
-            let rotation = ((-1*offset*.36) + 90 + (solarNoon*.36))
-            $('.solarNoon').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-          })
-          $(function() {
-            let rotation = ((-1*offset*.36) + 90 + (sunrise*.36))
-            $('.sunrise').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-          })
-          $(function() {
-            let rotation = ((-1*offset*.36) + 90 + (sunset*.36))
-            $('.sunset').css('transform', 'rotate(' + rotation + 'deg) translateX(' + distance + 'px) rotate(-' + rotation + 'deg)')
-          })
-        })
-      })
-  }
-
-  render() {
-    let roundedBeat = Number(Math.round(this.state.now+'e1')+'e-1');
-    return (
-      <div className="clockFace">
-        <CircularProgressbar percentage={this.state.fauxPercent} />
-        <div className="timeContainer">
-          <time className="nowTime">@{roundedBeat}</time>
-          <time className="relativeTimes">{this.state.relativeTimes}</time>
-        </div>
-
-          <div className="spinnyBox sunrise">
-            <svg>
-              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
-            </svg>
-            <p>^</p>
-          </div>
-          <div className="spinnyBox sunset">
-            <svg>
-              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
-            </svg>
-            <p>-</p>
-          </div>
-          <div className="spinnyBox solarNoon">
-            <svg>
-              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
-            </svg>
-            <p>#</p>
-          </div>
-          <div className="spinnyBox midnight">
-            <svg>
-              <circle cx="30" cy="30" r="25" stroke="black" stroke-width="8" fill="#302b63"/>
-            </svg>
-            <p>*</p>
-          </div>
+  return (
+    <div className="clockFace" style={{ width: dimensions.size, height: dimensions.size }}>
+      <CircularProgressbar
+        value={timeState.fauxPercent}
+        styles={{
+          path: { stroke: '#a75149', strokeLinecap: 'butt' },
+          trail: { stroke: '#886d4d' },
+          text: { visibility: 'hidden' }
+        }}
+      />
+      <div className="timeContainer">
+        <time className="nowTime" style={{ fontSize: `${dimensions.size * 0.01}em` }}>
+          @{roundedBeat}
+        </time>
+        <time className="relativeTimes" style={{ fontSize: `${dimensions.size * 0.005}em` }}>
+          {timeState.relativeTimes}
+        </time>
       </div>
-    );
-  }
-}
+      
+      <TimeMarker type="sunrise" transform={getRotation(timeState.dayStart, timeState.sunSight)} />
+      <TimeMarker type="sunset" transform={getRotation(timeState.dayStart, timeState.sunClipse)} />
+      <TimeMarker type="solarNoon" transform={getRotation(timeState.dayStart, timeState.solarNoon)} />
+      <TimeMarker type="midnight" transform={getRotation(timeState.dayStart, timeState.dayStart)} />
+    </div>
+  );
+};
+
+const TimeMarker = ({ type, transform }) => (
+  <div className={`spinnyBox ${type}`} style={{ transform }}>
+    <svg>
+      <circle cx="30" cy="30" r="25" stroke="black" strokeWidth="8" fill="#302b63"/>
+    </svg>
+    <p>{type === 'sunrise' ? '^' : type === 'sunset' ? '-' : type === 'solarNoon' ? '#' : '*'}</p>
+  </div>
+);
 
 export default ClockFace;

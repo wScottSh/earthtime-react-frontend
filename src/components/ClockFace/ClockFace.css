@@ -13,6 +13,14 @@ time {
   justify-content: center;
 }
 
+.clockFace {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
 .timeContainer {
   position: absolute;
   display: flex;
@@ -26,6 +34,7 @@ time {
   width: 60px;
   height: 60px;
   transform-origin: center;
+  transition: transform 0.3s ease;
 }
 
 .CircularProgressbar {
