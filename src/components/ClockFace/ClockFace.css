@@ -37,7 +37,17 @@ time {
   transition: transform 0.3s ease;
 }
 
+/* Remove old CircularProgressbar styles */
 .CircularProgressbar {
+  stroke-width: 2px;
+}
+
+/* Add new progress styles */
+.progress-bar {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.progress-background {
   stroke-width: 2px;
 }
 

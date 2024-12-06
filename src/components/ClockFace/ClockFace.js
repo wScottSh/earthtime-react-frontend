@@ -1,21 +1,30 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import React, { useState, useCallback, useEffect } from 'react';
 import './ClockFace.css';
 import axios from 'axios';
+import CircularProgress from './CircularProgress';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://earthtime-react.herokuapp.com';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+
+// Ensure TimeMarker is properly defined as a React component
+const TimeMarker = React.memo(({ type, transform }) => (
+  <div className={`spinnyBox ${type}`} style={{ transform }}>
+    <svg>
+      <circle cx="30" cy="30" r="25" stroke="black" strokeWidth="8" fill="#302b63"/>
+    </svg>
+    <p>{type === 'sunrise' ? '^' : type === 'sunset' ? '-' : type === 'solarNoon' ? '#' : '*'}</p>
+  </div>
+));
 
 const ClockFace = () => {
   const [timeState, setTimeState] = useState({
     now: 0,
     fauxPercent: 0,
     relativeTimes: '',
-    dayStart: '',
-    sunSight: '',
-    solarNoon: '',
-    sunClipse: '',
-    dayEnd: ''
+    dayStart: '*0',
+    sunSight: '^0',
+    solarNoon: '#0',
+    sunClipse: '-0',
+    dayEnd: '*0'
   });
 
   const [dimensions, setDimensions] = useState({
@@ -37,11 +46,23 @@ const ClockFace = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API_URL}/api/v1/earthtime`);
-        const beatCounter = data.beatLength;
+        const beatCounter = data.beatLength || 1000;
+
+        // Initial state update
+        setTimeState(prevState => ({
+          ...prevState,
+          now: data.earthTime.now,
+          fauxPercent: data.earthTime.now * 0.1,
+          dayStart: `*${Math.round((data.earthTime.dayStart + 1000) % 1000)}`,
+          sunSight: `^${Math.round((data.earthTime.solarSight + 1000) % 1000)}`,
+          solarNoon: `#${Math.round((data.earthTime.solarNoon + 1000) % 1000)}`,
+          sunClipse: `-${Math.round((data.earthTime.solarClipse + 1000) % 1000)}`,
+          dayEnd: `*${Math.round((data.earthTime.dayEnd + 1000) % 1000)}`
+        }));
 
         const timer = setInterval(() => {
           setTimeState(prev => {
-            const rightNow = data.earthTime.now + 0.01;
+            const rightNow = prev.now + 0.01;
             const obj = data.earthTime;
 
             let relativeTimes = '';
@@ -85,14 +106,7 @@ const ClockFace = () => {
 
   return (
     <div className="clockFace" style={{ width: dimensions.size, height: dimensions.size }}>
-      <CircularProgressbar
-        value={timeState.fauxPercent}
-        styles={{
-          path: { stroke: '#a75149', strokeLinecap: 'butt' },
-          trail: { stroke: '#886d4d' },
-          text: { visibility: 'hidden' }
-        }}
-      />
+      <CircularProgress value={timeState.fauxPercent} size={dimensions.size} />
       <div className="timeContainer">
         <time className="nowTime" style={{ fontSize: `${dimensions.size * 0.01}em` }}>
           @{roundedBeat}
@@ -110,13 +124,5 @@ const ClockFace = () => {
   );
 };
 
-const TimeMarker = ({ type, transform }) => (
-  <div className={`spinnyBox ${type}`} style={{ transform }}>
-    <svg>
-      <circle cx="30" cy="30" r="25" stroke="black" strokeWidth="8" fill="#302b63"/>
-    </svg>
-    <p>{type === 'sunrise' ? '^' : type === 'sunset' ? '-' : type === 'solarNoon' ? '#' : '*'}</p>
-  </div>
-);
-
+// Make sure to use default export
 export default ClockFace;
