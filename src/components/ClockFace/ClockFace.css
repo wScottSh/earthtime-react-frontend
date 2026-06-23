@@ -547,3 +547,32 @@
   border-radius: 50%;
   animation: rotate 0.8s linear infinite;
 }
+
+/* Global Midnight Marker (Red Line) */
+.global-midnight-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  /* Short line */
+  background-color: #ff3333;
+  transform-origin: center center;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+/* Current Beat Dot */
+.current-beat-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transform-origin: center center;
+  z-index: 15;
+  box-shadow: 0 0 10px #ffffff;
+  pointer-events: none;
+}

@@ -3,6 +3,7 @@ import './ClockFace.css';
 import axios from 'axios';
 import CircularProgress from './CircularProgress.jsx';
 import YearlyRing from './YearlyRing.jsx';
+import TooltipWrapper from '../UI/TooltipWrapper.jsx';
 import {
   searchLocations,
   reverseGeocode,
@@ -12,6 +13,23 @@ import {
 } from '../../utils/geocoding';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+// Time marker component with hover effect
+// Helper to get local time string with TZ
+const getLocalTimeString = () => {
+  return new Date().toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
+};
+
+// Helper to get generic event time string (mocking event time for now as "Local Time")
+// In a real app, we'd calculate the specific time of the event.
+// For now, satisfy the "Show Local Time" requirement basics.
+const getEventTooltip = (label, beat) => {
+  return `${label} @${beat}\n${getLocalTimeString()}`; // Simple stack for now, can refine if we have event timestamps
+};
 
 // Time marker component with hover effect
 const TimeMarker = React.memo(({ type, transform, label, beat }) => {
@@ -26,7 +44,8 @@ const TimeMarker = React.memo(({ type, transform, label, beat }) => {
     <div
       className={`time-marker time-marker--${type}`}
       style={{ transform }}
-      title={`${label}: @${beat}`}
+      data-tooltip-id="global-tooltip"
+      data-tooltip-content={`@${beat}\n${label}`} /* Stacked: Beat \n Label */
     >
       <span className="time-marker-icon">{icons[type]}</span>
       <span className="time-marker-label">@{beat}</span>
@@ -353,6 +372,25 @@ const ClockFace = () => {
     return `${prev.sym}|@${diffPrev}|@${diffNext}|${next.sym}`;
   }, [data.global.beat, data.local.beats]);
 
+  // Gregorian Date Formatter
+  const getGregorianDate = () => {
+    const now = new Date();
+    return now.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  // Timezone formatter
+  const getCurrentTimeWithTZ = () => {
+    return new Date().toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+  };
+
   return (
     <div className="clock-container">
       {/* Location Bar */}
@@ -403,10 +441,20 @@ const ClockFace = () => {
 
         <div className="time-container">
           {/* Yearly Display */}
-          <div className="year-display">{displayYearDay}</div>
+          <div
+            className="year-display"
+            data-tooltip-id="global-tooltip"
+            data-tooltip-content={`${displayYearDay}\n${getGregorianDate()}`}
+          >
+            {displayYearDay}
+          </div>
 
           {/* Main Global Time */}
-          <time className="now-time">
+          <time
+            className="now-time"
+            data-tooltip-id="global-tooltip"
+            data-tooltip-content={`@${displayBeat}\n${getCurrentTimeWithTZ()}`}
+          >
             <span className="at-symbol">@</span>{displayBeat}
           </time>
 
@@ -419,7 +467,7 @@ const ClockFace = () => {
           </div>
         </div>
 
-        {/* Time Markers - Positioned via local.positions, Labeled via local.beats */}
+        {/* Time Markers */}
         <TimeMarker
           type="sunrise"
           transform={getLocalRotation(data.local.positions.sunrise)}
@@ -444,7 +492,43 @@ const ClockFace = () => {
           label="Solar Midnight"
           beat={data.local.beats.midnight}
         />
+
+        {/* Global Midnight Marker (Red Line) - Position at relative 0 */}
+        {/* If local.positions.midnight is 0 on the face, then Global 0 is diff? */}
+        {/* Wait. Local Positions: 0=Midnight, 500=Midday. */}
+        {/* Current Position = X. The user wants "Indicator on Local Clock for Global Midnight (@0)" */}
+        {/* @0 Global Beat occurs at a specific LOCAL position. */}
+        {/* We have: data.local.beats.midnight (Global beat when local midnight happens) */}
+        {/* We can solve: Position of Global 0. */}
+        {/* If Global Beat B corresponds to Local Pos P... */}
+        {/* Global 0 is at Local Pos? */}
+        {/* global.beat = 0 when local.currentPosition = ? */}
+        {/* Shift = currentPosition - globalBeat (approx in 1000 units). */}
+        {/* Let's use the offset: offset = local.currentPosition - global.beat */}
+        {/* Target Position (for @0) = 0 + offset */}
+        <div
+          className="global-midnight-marker"
+          style={{
+            transform: getLocalRotation(
+              (data.local.currentPosition - data.global.beat + 1000) % 1000
+            )
+          }}
+          data-tooltip-id="global-tooltip"
+          data-tooltip-content={`Global Midnight (@0)\nPoint Nemo`}
+        />
+
+        {/* Current Beat Dot - Tracks currentPosition */}
+        <div
+          className="current-beat-dot"
+          style={{
+            transform: getLocalRotation(data.local.currentPosition)
+          }}
+          data-tooltip-id="global-tooltip"
+          data-tooltip-content={`Current Beat @${displayBeat}\n${getCurrentTimeWithTZ()}`}
+        />
       </div>
+
+      <TooltipWrapper id="global-tooltip" />
 
       {/* Solar Info Panel */}
       <div className="solar-info">
