@@ -1,0 +1,114 @@
+/* Radial two-band dial. Hierarchy (issue #7): now-indicator > event glyphs >
+   scale numerals > hairline ticks. Accessibility (issue #13): all dial text is
+   >= 12px and >= 4.5:1 against its (dark) backdrop; the now-indicator, ticks,
+   and leaders clear 3:1 against the dark dial background. */
+
+.rdial {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Keep the backdrop dark so accent-colored ticks/leaders clear 3:1. */
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(10, 10, 15, 0.85) 0%,
+    rgba(10, 10, 15, 0.55) 60%,
+    transparent 72%
+  );
+}
+
+.rdial-svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.rdial-ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1;
+}
+
+/* Outer chapter ring: rotating @beat scale — the quietest layer, but still
+   >= 12px and >= 4.5:1 (secondary text on the dark dial). */
+.rdial-scale line {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1.5;
+}
+.rdial-scale text {
+  fill: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Event anchor tick (the point of truth) + optional leader back to it. */
+.rdial-etick {
+  stroke: currentColor;
+  stroke-width: 2.5;
+}
+.rdial-leader {
+  stroke: currentColor;
+  stroke-width: 1.25;
+  opacity: 0.7;
+}
+
+/* Event glyph chip: head = event color, glyph = black (>= 4.5:1 on every
+   event color). Glyphs stay upright at all angles. */
+.rdial-chip {
+  fill: currentColor;
+}
+.rdial-glyph {
+  fill: #000;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Now indicator — highest contrast, most prominent mark on the dial. */
+.rdial-now {
+  fill: #fff;
+  stroke: rgba(0, 0, 0, 0.55);
+  stroke-width: 4;
+  paint-order: stroke;
+}
+
+/* Center overlay: Earth date, hero @beat, stacked relative readout. */
+.rdial-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.rdial-date {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.rdial-beat {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+.rdial-at {
+  color: var(--color-accent-primary);
+}
+.rdial-rel {
+  margin-top: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.25;
+}
+.rdial-rel b {
+  color: var(--color-text-primary);
+}
+.rdial-sym {
+  font-weight: 700;
+}

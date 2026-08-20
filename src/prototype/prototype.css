@@ -1,0 +1,564 @@
+/* PROTOTYPE — throwaway styles for the layout variants. */
+
+.proto-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  background: linear-gradient(
+    135deg,
+    var(--color-gradient-start) 0%,
+    var(--color-gradient-mid) 50%,
+    var(--color-gradient-end) 100%
+  );
+}
+
+.proto-stage {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.proto-loading {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ---- Location presets (top) ---- */
+.proto-presets {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.proto-preset {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--color-text-secondary);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.proto-preset:hover { color: var(--color-text-primary); }
+.proto-preset.is-active {
+  background: var(--color-accent-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ---- Floating switcher (bottom) ---- */
+.proto-switcher {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: #000;
+  border: 1px solid var(--color-accent-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius-full);
+  padding: var(--space-xs) var(--space-sm);
+  z-index: 1000;
+}
+.proto-switcher-arrow {
+  background: transparent;
+  border: none;
+  color: var(--color-accent-primary);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  padding: 0 var(--space-sm);
+  line-height: 1;
+}
+.proto-switcher-label {
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+  min-width: 12rem;
+  text-align: center;
+}
+.proto-switcher-label b { color: var(--color-text-primary); }
+
+/* ========================================================= */
+/* Variant A — Broadcast headline                            */
+/* ========================================================= */
+.vA {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+.vA-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+.vA-hero {
+  font-family: var(--font-mono);
+  font-size: var(--text-hero);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.vA-at { color: var(--color-accent-primary); }
+.vA-next {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+}
+.vA-next b { color: var(--color-text-primary); }
+.vA-section-label {
+  align-self: flex-start;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+}
+.vA-solarbar {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-lg);
+}
+.vA-daylight {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent-sunrise), var(--color-accent-noon), var(--color-accent-sunset));
+  border-radius: var(--radius-full);
+  opacity: 0.5;
+}
+.vA-tick {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vA-tick-dot { width: 10px; height: 10px; border-radius: 50%; }
+.vA-tick-label {
+  position: absolute;
+  top: -1.6rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+.vA-now {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 22px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+.vA-yearbar {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 2px;
+  margin-top: var(--space-xs);
+}
+.vA-seg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+.vA-seg.is-current { background: var(--color-accent-secondary); }
+.vA-year-now {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 14px;
+  background: #fff;
+  transform: translateX(-50%);
+}
+.vA-year-caption {
+  align-self: flex-start;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* ========================================================= */
+/* Variant B — Disciplined dial                              */
+/* ========================================================= */
+.vB {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+.vB-place {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.vB-dial {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vB-ring {
+  position: absolute;
+  inset: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+}
+.vB-marker {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.vB-marker-sym { font-family: var(--font-mono); font-size: var(--text-base); font-weight: 700; }
+.vB-marker-beat { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-secondary); }
+.vB-nowdot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+}
+/* 100-beat ticks, drawn radially across the ring edge */
+.vB-tick {
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 1px;
+}
+.vB-tick.is-crossover {
+  width: 22px;
+  height: 3px;
+  background: var(--color-accent-secondary);
+}
+.vB-ticklabel {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+.vB-tick-cap {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-secondary);
+  transform: translateY(-50%);
+  box-shadow: 0 0 8px var(--color-accent-secondary);
+}
+/* exact-position dot for each solar event, sitting on the ring */
+.vB-dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(10, 10, 15, 0.6);
+  box-shadow: 0 0 6px currentColor;
+}
+.vB-center { text-align: center; }
+.vB-date { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); }
+.vB-beat {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1;
+}
+.vB-at { color: var(--color-accent-primary); }
+.vB-next { font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--space-xs); }
+.vB-caption {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+}
+.vB-caption-strong { color: var(--color-accent-secondary); font-weight: 600; }
+.vB-caption-arrow { color: var(--color-text-muted); }
+
+/* ========================================================= */
+/* Variant C — Labeled cards                                 */
+/* ========================================================= */
+.vC {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.vC-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  backdrop-filter: var(--glass-blur);
+}
+.vC-card-title {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+.vC-hero { text-align: center; }
+.vC-beat {
+  font-family: var(--font-mono);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  line-height: 1;
+}
+.vC-at { color: var(--color-accent-primary); }
+.vC-hero-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+}
+.vC-nextline { font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-md); }
+.vC-nextline b { color: var(--color-text-primary); }
+.vC-events { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm); }
+.vC-event {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+}
+.vC-event.is-next {
+  border-color: var(--glass-border);
+  background: rgba(255, 255, 255, 0.04);
+}
+.vC-event-sym { font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 600; }
+.vC-event-beat { font-family: var(--font-mono); font-size: var(--text-sm); }
+.vC-event-name { font-size: var(--text-xs); color: var(--color-text-muted); }
+.vC-year {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  margin-bottom: var(--space-sm);
+}
+.vC-yseg {
+  flex: 1;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.vC-yseg.is-current { background: rgba(167, 139, 250, 0.25); border: 1px solid var(--color-accent-secondary); }
+.vC-yseg-name {
+  font-size: 0.5rem;
+  color: var(--color-text-muted);
+  padding: 2px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 100%;
+}
+.vC-year-now {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 42px;
+  background: #fff;
+  transform: translateX(-50%);
+}
+.vC-year-caption { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+/* ========================================================= */
+/* Shared baseline dial + emphasis-variant shell             */
+/* (supersedes the earlier .vA / .vB / .vC blocks above)     */
+/* ========================================================= */
+.vDial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+.vDial-top { font-size: var(--text-sm); color: var(--color-text-secondary); }
+.vDial-caption { font-size: var(--text-sm); color: var(--color-text-secondary); text-align: center; }
+.vDial-caption b { color: var(--color-accent-secondary); }
+
+.vDial-date { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); }
+.vDial-beat { font-family: var(--font-mono); font-weight: 700; line-height: 1; }
+.vDial-beat--hero { font-size: var(--text-2xl); }
+.vDial-beat--modest { font-size: var(--text-lg); color: var(--color-text-secondary); font-weight: 500; }
+.vDial-at { color: var(--color-accent-primary); }
+.vDial-next { font-size: var(--text-sm); color: var(--color-text-secondary); margin-top: var(--space-xs); }
+.vDial-nextbig { font-size: var(--text-base); color: var(--color-text-primary); margin-top: var(--space-sm); }
+.vDial-nextbig b { color: var(--color-accent-secondary); }
+
+.dial {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dial-ring {
+  position: absolute;
+  inset: 8.33%;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+}
+/* Global @beat ticks — uniform, quiet. @0 is only barely distinguished. */
+.dial-tick {
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 1px;
+}
+.dial-tick.is-reset {
+  width: 14px;
+  background: rgba(255, 255, 255, 0.4);
+}
+.dial-ticklabel {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+.dial-now {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
+}
+/* Solar event glyph on the rim (the signifier). */
+.dial-sym {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-base);
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+.dial-symbeat {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.dial-center { position: absolute; text-align: center; }
+
+/* ---- Event pins: tiny, INSIDE the ring, tip apex on the dial line ----
+   Container is a 0x0 point anchored at the ring radius, local +X pointing
+   outward. The tip apex sits at that point (exactly on the line); the head
+   sits just inside. Head = event color, glyph = black. */
+.dial-pin {
+  position: absolute;
+  width: 0;
+  height: 0;
+  line-height: 0;
+}
+.dial-pin-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-100%, -50%);
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid currentColor; /* apex points outward, onto the ring */
+}
+.dial-pin-head {
+  position: absolute;
+  right: 6px; /* right edge meets the tip base, just inside the ring */
+  top: 0;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dial-pin-glyph {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 9px;
+  line-height: 1;
+  color: #000;
+}
+
+/* ---- Relative readout (prev / next) ---- */
+.rel {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-xs);
+  line-height: 1.15;
+}
+.rel b { color: var(--color-text-primary); }
+.rel-sym { font-weight: 700; }
+.rel-div { color: var(--color-text-muted); }
+.rel--stack { display: flex; flex-direction: column; gap: 0; }
+.rel--inline { display: flex; gap: var(--space-xs); align-items: baseline; justify-content: center; }
+
+/* ========================================================= */
+/* SVG dial (research-based two-band model)                  */
+/* ========================================================= */
+.dial-svg { position: absolute; inset: 0; overflow: visible; }
+.dial-svg-ring { fill: none; stroke: var(--glass-border); stroke-width: 1; }
+/* Outer chapter ring: scale — lowest weight in the hierarchy */
+.dial-svg-scale line { stroke: rgba(255, 255, 255, 0.22); stroke-width: 1.5; }
+.dial-svg-scale text {
+  fill: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+/* Event anchor tick (the point of truth) + optional leader */
+.dial-svg-etick { stroke: currentColor; stroke-width: 2; }
+.dial-svg-leader { stroke: currentColor; stroke-width: 1; opacity: 0.55; }
+/* Event glyph chip: head = event color, glyph = black */
+.dial-svg-chip { fill: currentColor; }
+.dial-svg-glyph {
+  fill: #000;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+}
+/* Now indicator — highest contrast */
+.dial-svg-now { fill: #fff; stroke: rgba(255, 255, 255, 0.35); stroke-width: 4; paint-order: stroke; }
+
+/* center content sits over the SVG */
+.dial-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }

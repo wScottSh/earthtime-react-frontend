@@ -1,8 +1,8 @@
 import React from 'react';
-import ClockFace from '../ClockFace/ClockFace.jsx';
+import RadialClock from '../RadialClock/RadialClock.jsx';
 
 const Clock = () => (
-  <ClockFace />
+  <RadialClock />
 );
 
 export default Clock;

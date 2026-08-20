@@ -1,0 +1,28 @@
+/* RadialClock layout. The location chrome lives in LocationBar (self-contained
+   styles); this file only positions the face and its caption. */
+
+.rclock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  width: 100%;
+  max-width: 600px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.rclock-loading {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+/* GSE caption — sits below the dial, never overlapping the face (#12). */
+.rclock-caption {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+.rclock-caption b {
+  color: var(--color-accent-secondary);
+}
